@@ -1569,6 +1569,7 @@ function formatCardNumber(input) {
   }
 }
 
+
 function formatExpiry(input) {
   let val = input.value.replace(/\D/g, '').slice(0, 4);
   if (val.length >= 2) val = val.slice(0, 2) + ' / ' + val.slice(2);
@@ -1581,3 +1582,58 @@ function formatExpiry(input) {
       : 'MM/YY';
   }
 }
+
+// ==========================================================================
+// MOBILE NAV DRAWER
+// ==========================================================================
+function toggleMobileNav() {
+  const drawer = document.getElementById('mobile-nav-drawer');
+  const overlay = document.getElementById('mobile-nav-overlay');
+  const btn = document.getElementById('nav-hamburger-btn');
+  const isOpen = drawer.classList.contains('open');
+  if (isOpen) {
+    closeMobileNav();
+  } else {
+    drawer.classList.add('open');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    btn.setAttribute('aria-expanded', 'true');
+  }
+}
+
+function closeMobileNav() {
+  const drawer = document.getElementById('mobile-nav-drawer');
+  const overlay = document.getElementById('mobile-nav-overlay');
+  const btn = document.getElementById('nav-hamburger-btn');
+  drawer.classList.remove('open');
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+  if (btn) btn.setAttribute('aria-expanded', 'false');
+}
+
+// ==========================================================================
+// MOBILE FILTER TOGGLE (Shop Sidebar)
+// ==========================================================================
+function toggleMobileFilters() {
+  const sidebar = document.querySelector('.shop-sidebar');
+  const btn = document.getElementById('mobile-filter-btn');
+  if (!sidebar) return;
+  const isOpen = sidebar.classList.contains('mobile-open');
+  sidebar.classList.toggle('mobile-open');
+  if (btn) {
+    btn.textContent = isOpen ? '⚡ Filters' : '✕ Close Filters';
+    if (isOpen) {
+      btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="8" y1="12" x2="16" y2="12"></line><line x1="11" y1="18" x2="13" y2="18"></line></svg> Filters`;
+    } else {
+      btn.innerHTML = `✕ Close Filters`;
+    }
+  }
+}
+
+// Close mobile nav on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeMobileNav();
+  }
+});
+
