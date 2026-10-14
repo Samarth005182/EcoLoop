@@ -1,5 +1,5 @@
 /* ==========================================================================
-   EcoLoop — Exact Design System matching the attached User UI Mockup
+   BEEJAM — Exact Design System matching the attached User UI Mockup
    Tone: Warm Organic Cream / Off-White, Sage Greens, Deep Forest Accent
    Typography: 'Plus Jakarta Sans', clean, airy, high-contrast, rounded corners
    ========================================================================== */
@@ -177,9 +177,10 @@ body {
 }
 
 .brand-leaf-icon {
-  width: 24px;
-  height: 24px;
-  color: var(--color-forest);
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex: 0 0 auto;
 }
 
 .brand-name {
@@ -1954,7 +1955,7 @@ body {
 }
 
 /* ==========================================================================
-   SCREEN 7: ABOUT ECOLOOP
+   SCREEN 7: ABOUT BEEJAM
    ========================================================================== */
 .about-card-wrapper {
   background: var(--bg-card);
@@ -2884,9 +2885,10 @@ body {
 }
 
 .auth-leaf-icon {
-  width: 32px;
-  height: 32px;
-  color: #B4DFBA;
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  flex: 0 0 auto;
 }
 
 .auth-brand-name {

@@ -1,9 +1,9 @@
 // ==========================================================================
-// EcoLoop — Sustainable E-Commerce Logic & Interactive Prototype
+// BEEJAM — Sustainable E-Commerce Logic & Interactive Prototype
 // Pixel-Perfect Implementation matching Reference Mockup Design
 // ==========================================================================
 
-const EcoLoopData = {
+const BeejamData = {
   categories: [
     { 
       id: 'reusable', 
@@ -733,7 +733,7 @@ function renderHomeCategories() {
   const container = document.getElementById('home-categories-grid');
   if (!container) return;
 
-  container.innerHTML = EcoLoopData.categories.map(cat => `
+  container.innerHTML = BeejamData.categories.map(cat => `
     <div class="category-card" onclick="filterByCategory('${cat.id}')">
       <div class="category-img-wrap">
         <img src="${cat.image}" alt="${cat.name}" loading="lazy">
@@ -748,7 +748,7 @@ function renderHomeFeatured() {
   if (!container) return;
 
   // Display first 4 featured items
-  const featured = EcoLoopData.products.slice(0, 4);
+  const featured = BeejamData.products.slice(0, 4);
   container.innerHTML = featured.map(p => createProductCardMarkup(p)).join('');
 }
 
@@ -796,7 +796,7 @@ function renderShopCategoryChips() {
   const container = document.getElementById('shop-category-list');
   if (!container) return;
 
-  const totalProducts = EcoLoopData.products.length;
+  const totalProducts = BeejamData.products.length;
   let html = `
     <label class="filter-radio-row">
       <input type="radio" name="shop-category" value="all" ${state.activeCategoryFilter === 'all' ? 'checked' : ''} onchange="onCategoryRadioChange('all')">
@@ -806,7 +806,7 @@ function renderShopCategoryChips() {
     </label>
   `;
 
-  EcoLoopData.categories.forEach(cat => {
+  BeejamData.categories.forEach(cat => {
     const isChecked = state.activeCategoryFilter === cat.id;
     html += `
       <label class="filter-radio-row">
@@ -837,7 +837,7 @@ function renderShopProducts() {
   const countLabel = document.getElementById('shop-product-count');
   if (!container) return;
 
-  let filtered = EcoLoopData.products.filter(p => {
+  let filtered = BeejamData.products.filter(p => {
     // Category check
     if (state.activeCategoryFilter !== 'all' && p.category !== state.activeCategoryFilter) {
       return false;
@@ -910,7 +910,7 @@ function resetShopFilters() {
 // PRODUCT DETAIL PAGE (PDP)
 // ==========================================================================
 function openProductDetail(productId) {
-  const p = EcoLoopData.products.find(item => item.id === productId);
+  const p = BeejamData.products.find(item => item.id === productId);
   if (!p) return;
 
   state.selectedProductId = productId;
@@ -967,7 +967,7 @@ function openProductDetail(productId) {
   // Related products
   const relatedContainer = document.getElementById('pdp-related-grid');
   if (relatedContainer) {
-    const related = EcoLoopData.products.filter(item => item.id !== p.id).slice(0, 4);
+    const related = BeejamData.products.filter(item => item.id !== p.id).slice(0, 4);
     relatedContainer.innerHTML = related.map(prod => createProductCardMarkup(prod)).join('');
   }
 
@@ -1007,7 +1007,7 @@ function addToCart(productId, quantity = 1) {
     state.cart.push({ id: productId, qty: quantity });
   }
 
-  const p = EcoLoopData.products.find(prod => prod.id === productId);
+  const p = BeejamData.products.find(prod => prod.id === productId);
   showToast(`Added ${quantity} × ${p ? p.name : 'item'} to cart`);
   updateCartCounters();
   if (state.currentView === 'cart') renderCartView();
@@ -1042,7 +1042,7 @@ function updateCartCounters() {
 // Single source of truth for cart totals (free delivery on orders ≥ ₹499)
 function getCartTotals() {
   const subtotal = state.cart.reduce((sum, ci) => {
-    const p = EcoLoopData.products.find(pr => pr.id === ci.id);
+    const p = BeejamData.products.find(pr => pr.id === ci.id);
     return sum + (p ? p.price * ci.qty : 0);
   }, 0);
   const delivery = subtotal === 0 || subtotal >= 499 ? 0 : 40;
@@ -1079,7 +1079,7 @@ function renderCartView() {
   }
 
   listContainer.innerHTML = state.cart.map(item => {
-    const p = EcoLoopData.products.find(prod => prod.id === item.id);
+    const p = BeejamData.products.find(prod => prod.id === item.id);
     if (!p) return '';
 
     return `
@@ -1124,7 +1124,7 @@ function renderCheckoutSummary() {
   if (!itemsContainer) return;
 
   itemsContainer.innerHTML = state.cart.map(item => {
-    const p = EcoLoopData.products.find(prod => prod.id === item.id);
+    const p = BeejamData.products.find(prod => prod.id === item.id);
     if (!p) return '';
     const lineTotal = p.price * item.qty;
 
@@ -1457,7 +1457,7 @@ function renderPaymentItems() {
   if (!container) return;
 
   const cartItems = state.cart.map(ci => {
-    const p = EcoLoopData.products.find(pr => pr.id === ci.id);
+    const p = BeejamData.products.find(pr => pr.id === ci.id);
     return p ? { ...p, qty: ci.qty } : null;
   }).filter(Boolean);
 
@@ -1535,7 +1535,7 @@ function confirmPayment() {
     paymentMethod: activePayTab ? activePayTab.textContent.trim() : 'UPI',
     customer: state.checkoutInfo,
     items: state.cart.map(item => {
-      const product = EcoLoopData.products.find(p => p.id === item.id);
+      const product = BeejamData.products.find(p => p.id === item.id);
       return product ? { ...product, qty: item.qty } : null;
     }).filter(Boolean),
     totals
