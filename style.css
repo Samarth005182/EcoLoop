@@ -152,10 +152,10 @@ body {
    SITE HEADER & NAVIGATION
    ========================================================================== */
 .site-header {
-  background: var(--glass-bg-header);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: var(--glass-border);
+  background: rgba(252, 254, 250, 0.97);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(40, 93, 59, 0.18);
   border-radius: var(--radius-xl);
   padding: 14px 28px;
   margin-bottom: 24px;
