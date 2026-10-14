@@ -646,11 +646,8 @@ const EcoLoopData = {
 
 // Global App State
 const state = {
-  cart: [
-    { id: 'p1', qty: 1 },
-    { id: 'p2', qty: 2 },
-    { id: 'p3', qty: 1 }
-  ],
+  cart: [],
+  lastOrder: null,
   wishlist: ['p1'],
   currentView: 'home',
   selectedProductId: 'p1',
@@ -726,6 +723,7 @@ function switchView(viewName) {
   if (viewName === 'cart') renderCartView();
   if (viewName === 'checkout') renderCheckoutSummary();
   if (viewName === 'shop') renderShopProducts();
+  if (viewName === 'order-details') renderOrderDetails();
 }
 
 // ==========================================================================
@@ -1528,13 +1526,72 @@ function copyUpiId() {
 }
 
 function confirmPayment() {
+  const totals = getCartTotals();
+  const activePayTab = document.querySelector('.pay-tab.active');
+  const placedAt = new Date();
+  state.lastOrder = {
+    id: `EL${placedAt.getTime().toString().slice(-8)}`,
+    placedAt,
+    paymentMethod: activePayTab ? activePayTab.textContent.trim() : 'UPI',
+    customer: state.checkoutInfo,
+    items: state.cart.map(item => {
+      const product = EcoLoopData.products.find(p => p.id === item.id);
+      return product ? { ...product, qty: item.qty } : null;
+    }).filter(Boolean),
+    totals
+  };
   closePayment();
   const successEmail = document.getElementById('success-email');
   if (successEmail && state.checkoutInfo) successEmail.textContent = state.checkoutInfo.email;
+  renderOrderDetails();
   state.cart = [];
   updateCartCounters();
-  switchView('success');
+  switchView('order-details');
   showToast('🎉 Payment successful! Order confirmed.');
+}
+
+function renderOrderDetails() {
+  const order = state.lastOrder;
+  if (!order) return;
+
+  const setText = (id, value) => {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value;
+  };
+  const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[char]));
+  const customer = order.customer || {};
+
+  setText('order-details-number', `#${order.id}`);
+  setText('order-details-date', order.placedAt.toLocaleString('en-IN', {
+    dateStyle: 'medium', timeStyle: 'short'
+  }));
+  setText('order-details-payment', order.paymentMethod);
+  setText('order-details-subtotal', fmtINR(order.totals.subtotal));
+  setText('order-details-delivery', order.totals.delivery === 0 ? 'FREE' : fmtINR(order.totals.delivery));
+  setText('order-details-total', fmtINR(order.totals.total));
+
+  const address = document.getElementById('order-details-address');
+  if (address) {
+    address.innerHTML = `<strong>${escapeHTML(customer.name)}</strong>
+      <span>${escapeHTML(customer.address)}</span>
+      <span>${escapeHTML(customer.city)}, ${escapeHTML(customer.state)} ${escapeHTML(customer.pincode)}</span>
+      <span>${escapeHTML(customer.phone)} · ${escapeHTML(customer.email)}</span>`;
+  }
+
+  const items = document.getElementById('order-details-items');
+  if (items) {
+    items.innerHTML = order.items.map(item => `
+      <div class="order-detail-item">
+        <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}">
+        <div class="order-detail-item-info">
+          <strong>${escapeHTML(item.name)}</strong>
+          <span>Qty: ${item.qty}</span>
+        </div>
+        <strong class="order-detail-item-price">${fmtINR(item.price * item.qty)}</strong>
+      </div>`).join('');
+  }
 }
 
 function sendUpiRequest() {
