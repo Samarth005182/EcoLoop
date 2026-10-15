@@ -1355,6 +1355,7 @@ function showToast(message) {
 function openLogin() {
   const el = document.getElementById('view-login');
   if (el) {
+    showLoginForm();
     el.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   }
@@ -1366,6 +1367,39 @@ function closeLogin() {
     el.style.display = 'none';
     document.body.style.overflow = '';
   }
+}
+
+function showRegister(event) {
+  if (event) event.preventDefault();
+  document.getElementById('auth-form-title').textContent = 'Create your account';
+  document.getElementById('auth-form-sub').textContent = 'Join the BEEJAM community';
+  document.querySelector('.auth-divider span').textContent = 'or sign up with email';
+  document.querySelector('.auth-email-form[onsubmit="handleLogin(event)"]').style.display = 'none';
+  document.getElementById('register-form').style.display = 'flex';
+  document.getElementById('auth-switch-login').style.display = 'none';
+  document.getElementById('auth-switch-register').style.display = '';
+  document.querySelector('.auth-social-row').style.display = 'none';
+}
+
+function showLoginForm(event) {
+  if (event) event.preventDefault();
+  document.getElementById('auth-form-title').textContent = 'Welcome back';
+  document.getElementById('auth-form-sub').textContent = 'Sign in to your BEEJAM account';
+  document.querySelector('.auth-divider span').textContent = 'or sign in with email';
+  document.querySelector('.auth-email-form[onsubmit="handleLogin(event)"]').style.display = 'flex';
+  document.getElementById('register-form').style.display = 'none';
+  document.getElementById('auth-switch-login').style.display = '';
+  document.getElementById('auth-switch-register').style.display = 'none';
+  document.querySelector('.auth-social-row').style.display = '';
+}
+
+function handleRegister(event) {
+  event.preventDefault();
+  const name = document.getElementById('register-name').value.trim();
+  closeLogin();
+  showToast(`Welcome to BEEJAM, ${name}!`);
+  event.target.reset();
+  showLoginForm();
 }
 
 function handleLogin(e) {
